@@ -15,5 +15,5 @@ def create_folder_and_subfolder(file_name):
     # Crea la subcarpeta si no existe
     if not os.path.exists(subfolder_path):
         os.makedirs(subfolder_path)
-    
+
     return subfolder_path
