@@ -6,7 +6,8 @@ import os
 def excel_to_outcomes_canvas(ruta_archivo, ruta_destino, nombre_archivo):
 
     ## leer excel de las consiganas de las actividades en excel
-    df_rubric = pd.read_excel(ruta_archivo)
+    df_rubric = pd.read_excel(ruta_archivo, sheet_name='Consignas')
+    df_rubric = df_rubric[df_rubric['Tiene rubrica?'] == 'Si']
 
     ## establecer valores por defecto para la exportacion de la rubrica df_outcomes
     calculation_method = 'latest'

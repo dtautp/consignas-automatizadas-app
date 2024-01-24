@@ -8,7 +8,7 @@ import os
 
 def excel_to_word(excel_file, ruta_destino):
     # Cargar datos desde el archivo Excel'
-    df = pd.read_excel(excel_file)
+    df = pd.read_excel(excel_file, sheet_name='Consignas')
 
     # Cambiar todos los datos a tipo string en el DataFrame
     df = df.astype(str)
@@ -28,8 +28,8 @@ def excel_to_word(excel_file, ruta_destino):
     df[columnas_pts] = df[columnas_pts].apply(lambda col: col.map(transformar_valor))
 
     # Plantillas de Word
-    word_template_evaluate = 'input/templates/Consigna de actividad (Evaluada).docx'
-    word_template_not_evaluate = 'input/templates/Consigna de actividad (No Evaluada).docx'
+    word_template_evaluate = 'input/templates/Consigna de actividad calificada - con rubrica.docx'
+    word_template_not_evaluate = 'input/templates/Consigna de actividad calificada - sin rubrica.docx'
 
     # Verificar si existen las plantillas de Word
     templates_exist = all([
@@ -46,17 +46,18 @@ def excel_to_word(excel_file, ruta_destino):
         # Crear un nuevo documento Word basado en la plantilla de consigna evaluada
         doc = Document(word_template_evaluate)
         # Si no es eveluada eleguir al otra plantilla no evaluada
-        if row['Es evaluada?'] == 'No':
+        if row['Tiene rubrica?'] == 'No':
             doc = Document(word_template_not_evaluate)
         
         # Obtener valores para el nombre del archivo
         titulo_consigna = row['Título consigna de actividad']
-        id_rubrica = row['id_rubrica']
+        id_rubrica = row['Nro catalogo'][-4:] + '-' + row['Sistema evaluación'] + '-' + row['Periodo lanzamiento'][:4] + row['Periodo lanzamiento'][5:6]
 
         # Construir 'nombre_archivo' considerando valores nulos en 'id_rubrica'
-        nombre_archivo = titulo_consigna
-        if id_rubrica != 'nan':
-            nombre_archivo = titulo_consigna + '_' + id_rubrica
+        # nombre_archivo = titulo_consigna
+        # if id_rubrica != 'nan':
+        #     nombre_archivo = titulo_consigna + '_' + id_rubrica
+        nombre_archivo = titulo_consigna + '_' + id_rubrica
 
         # Buscar y reemplazar en párrafos
         for para in doc.paragraphs:
